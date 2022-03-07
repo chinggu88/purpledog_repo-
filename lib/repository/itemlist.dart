@@ -13,45 +13,37 @@ class itemlist {
     var response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      var temp = json.decode(response.body).toList();
-      // var temp = response.data.toList();
+      List temp = json.decode(response.body).toList();      
+      //오름차순으로 정렬
+      temp.sort();
+      //내림차순으로 정렬
+      temp =temp.reversed.toList();
+
       for (int i = 0; i < temp.length; i++) {
         result.add(temp[i]);
       }
-      result.sort();
+      return result;
+    }else{
+      //200이외의 코드 처리
       return result;
     }
     return result;
   }
 
-  Future<dynamic> fetchlistDetail(String type) async {
-    dynamic? result = null;
+  Future<Map<String, dynamic>?> fetchlistDetail(String type) async {
+    Map<String,dynamic>? result = null;
 
     var uri = Uri.https('hacker-news.firebaseio.com', '/v0/item/${type}.json',
         {"print": "pretty"});
     var response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      Map<dynamic, dynamic> item = jsonDecode(response.body);
-      var temp;
-      switch (item['type'].toString()) {
-        case 'comment':
-          temp = detail_comment.fromJson(jsonDecode(response.body));
-          break;
-        case 'story':
-          temp = detail_story.fromJson(jsonDecode(response.body));
-          break;
-        case 'job':
-          temp = detail_job.fromJson(jsonDecode(response.body));
-          break;
-        case 'poll':
-          temp = detail_poll.fromJson(jsonDecode(response.body));
-          break;
-        case 'pollopt':
-          temp = detail_pollopt.fromJson(jsonDecode(response.body));
-          break;
-      }
-      print(temp.type);
+      Map<String, dynamic> item = jsonDecode(response.body);
+      result=item;
+      
+      return result;
+    }else{
+      //200이외의 코드 처리
       return result;
     }
     return result;

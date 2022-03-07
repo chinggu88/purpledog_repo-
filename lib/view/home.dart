@@ -17,10 +17,11 @@ class Home extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: 100,
+                height: Get.size.height * 0.1,
               ),
               Container(
                 width: Get.size.width * 0.8,
+                height: Get.size.height * 0.1,
                 child: AwesomeDropDown(
                     dropDownBGColor: Color(0xFFf2f2f2),
                     dropDownList: [
@@ -35,15 +36,18 @@ class Home extends StatelessWidget {
                     }),
               ),
               SizedBox(
-                height: 50,
+                height: Get.size.height * 0.05,
               ),
               Container(
                   width: Get.size.width * 0.8,
-                  height: 150,
+                  height: Get.size.height * 0.2,
                   child: Obx(
                     () {
                       return Home_controller.to.isloading.value
-                          ? Text("로딩중")
+                          ? Container(
+                              width: Get.size.width * 0.8,
+                              height: Get.size.height * 0.2,
+                              child: Center(child: Text("로딩중...")))
                           : ListView.builder(
                               padding: EdgeInsets.all(10),
                               scrollDirection: Axis.horizontal,
@@ -56,14 +60,21 @@ class Home extends StatelessWidget {
                                           Home_controller.to.listitem[index]
                                               .toString()),
                                       child: ClayContainer(
-                                        width: 100,
-                                        height: 100,
+                                        width: Get.size.height * 0.2,
+                                        height: Get.size.height * 0.2,
                                         color: Color(0xFFf2f2f2),
                                         child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Text(Home_controller
-                                                .to.listitem[index]
-                                                .toString()),
+                                            Text(
+                                                Home_controller
+                                                    .to.listitem[index]
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontFamily: 'Pre-Bold',
+                                                  fontSize: 15,
+                                                )),
                                           ],
                                         ),
                                       ),
@@ -76,22 +87,54 @@ class Home extends StatelessWidget {
                               });
                     },
                   )),
+              SizedBox(
+                height: Get.size.height * 0.05,
+              ),
               Container(
-                height: 400,
                 width: Get.size.width * 0.8,
-                color: Colors.red,
+                height: Get.size.height * 0.5,
                 child: Obx(() {
-                  return Column(
-                    children: [
-                      Text(Home_controller.to.itemdetail.value.toString()),
-                    ],
-                  );
+                  return Home_controller.to.itemdetail.value.isEmpty
+                      ? ClayContainer(
+                          height: Get.size.height * 0.45,
+                          child: Center(
+                              child: Text("골라주세요",
+                                  style: TextStyle(
+                                    fontFamily: 'Pre-Bold',
+                                    fontSize: 22,
+                                  ))),
+                        )
+                      : ClayContainer(
+                          height: Get.size.height * 0.45,
+                          child: SingleChildScrollView(child: detailvalue()),
+                        );
+                  // return Container(child: detailvalue());
                 }),
               ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  Widget detailvalue() {
+    List<Widget> widgetlist = [];
+    Home_controller.to.itemdetail.forEach((key, value) {
+      widgetlist.add(Container(
+        padding: EdgeInsets.all(5),
+        width: Get.size.width * 0.8,
+        child: Text('${key.toString()} :: ${value.toString()}',
+            softWrap: true,
+            textAlign: TextAlign.start,
+            style: new TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold)),
+      ));
+    });
+    return Column(
+      children: widgetlist,
     );
   }
 }
