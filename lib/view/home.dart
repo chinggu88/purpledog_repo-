@@ -1,5 +1,5 @@
-import 'package:awesome_dropdown/awesome_dropdown.dart';
 import 'package:clay_containers/clay_containers.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:indexed_list_view/indexed_list_view.dart';
@@ -23,18 +23,46 @@ class Home extends StatelessWidget {
               Container(
                 width: Get.size.width * 0.8,
                 height: Get.size.height * 0.08,
-                child: AwesomeDropDown(
-                    dropDownBGColor: Color(0xFFf2f2f2),
-                    dropDownList: [
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    items: [
                       "topstories",
                       "newstories",
                       "askstories",
                       "showstories",
                       "jobstories"
-                    ],
-                    onDropDownItemClick: (selectedItem) {
-                      Home_controller.to.changelist(selectedItem);
-                    }),
+                    ]
+                        .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontFamily: 'Pre-Bold',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    value: Home_controller.to.selectString.value,
+                    onChanged: (value) {
+                      Home_controller.to.changelist(value as String);
+                    },
+                    buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                    buttonDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.black26,
+                      ),
+                      color: Color(0xFFf2f2f2),
+                    ),
+                    dropdownDecoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
               ),
               SizedBox(
                 height: Get.size.height * 0.05,
